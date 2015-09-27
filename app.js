@@ -4,9 +4,9 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
-var routes = require('./routes/index');
-var users = require('./routes/users');
+var passport = require('passport');
+var session = require('express-session');
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 var app = express();
 
@@ -22,8 +22,20 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/users', users);
+app.use(session({secret:'codinghouse', resave: true, saveUninitialized: true}));
+
+require('./config/passport')(app);
+
+app.use('/', require('./routes/index'));
+app.use('/auth', require('./routes/auth'));
+
+var logout = function(req, res){
+  if (req.isAuthenticated()){
+    req.logout();
+  }
+  res.redirect('/');
+};
+app.get('/logout', logout);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -32,10 +44,6 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-// error handlers
-
-// development error handler
-// will print stacktrace
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
@@ -45,7 +53,6 @@ if (app.get('env') === 'development') {
     });
   });
 }
-
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
@@ -55,6 +62,4 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
-
 module.exports = app;

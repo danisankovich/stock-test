@@ -1,0 +1,23 @@
+<div class="container">
+  <div class="row">
+    <p>Hello search page</p>
+  </div>
+  <form ng-submit="findBySymbol()">
+    <input type="text" ng-model="symbol" placeholder="Enter Symbol or Company Name"/>
+    <input type="submit"/>
+  </form>
+  <ul ng-show="(shown)">
+    <li>Symbol: {{stockInfo[0].Symbol}}</li>
+    <li>Company Name: {{stockInfo[0].Name}}</li>
+    <li>Exchange: {{stockInfo[0].Exchange}}</li>
+    <li>Open Price: ${{stockData.Open}}</li>
+    <li>Last Price: ${{stockData.LastPrice}}</li>
+    <li>Change: ${{stockData.Change}}</li>
+    <li>Change Percent: %{{stockData.ChangePercent}}</li>
+    <li>Change Percent YTD: %{{stockData.ChangePercentYTD}}</li>
+    <li>Today's High: ${{stockData.High}}</li>
+    <li>Today's Low: ${{stockData.Low}}</li>
+    <li>Market Cap: ${{stockData.MarketCap}}</li>
+    <li>Volume: {{stockData.Volume}}</li>
+  </ul>
+</div>
